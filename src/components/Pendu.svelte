@@ -11,6 +11,7 @@
 	let penduParts = [];
 	let wrapperPendu = false;
 	let hidden = false;
+	let inputValueStock = [];
 
 	const wordStock = [
 		'stock',
@@ -28,7 +29,6 @@
 
 	initializeGame();
 
-
 	function initializeGame() {
 		guessedLetters = [];
 		inputValue = '';
@@ -39,6 +39,7 @@
 		displayWordToFind = null;
 		loseMessage = '';
 		badAnswer = 0;
+		inputValueStock = [];
 
 		displayWordToFind = wordTab[0]
 			.split('')
@@ -53,6 +54,9 @@
 	}
 
 	function isLetterOk() {
+		let userLetter = inputValue.toLowerCase();
+		inputValueStock.push(userLetter);
+		inputValueStock = [...inputValueStock];
 		if (!inputValue) return;
 		const allLetters = wordTab[0].split('');
 		if (allLetters.includes(inputValue.toLowerCase())) {
@@ -91,9 +95,12 @@
 <div class="container">
 	<div class="wrapper-interface">
 		<label for="word">Saisissez une lettre</label>
-		<input bind:value={inputValue} on:input={isLetterOk}  type="text" placeholder="" name="word " />
-		<!-- <button on:click={isLetterOk}>Valider</button> -->
-
+		<input bind:value={inputValue} on:input={isLetterOk} type="text" placeholder="" name="word " />
+		<div class="wrapper-letters-user-choice">
+		{#each inputValueStock as letter}
+			<div class="lettres-choice-user">{letter}</div>
+		{/each}
+		</div>
 		<p class="display-word">{displayWordToFind}</p>
 		<p class="win-message">{winMessage}</p>
 		{#if loseMessage}
@@ -160,6 +167,13 @@
 		font-size: 1rem;
 		text-align: center;
 	}
+	.wrapper-letters-user-choice {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		justify-content: center;
+
+	}
 
 	.display-word {
 		font-size: 1rem;
@@ -204,6 +218,10 @@
 		visibility: visible;
 		opacity: 1;
 		transition: opacity 0.3s ease-in-out; /* Animation pour l'apparition */
+	}
+	.lettres-choice-user {
+		color: white;
+		font-size: 1rem;
 	}
 
 	.horizontal {
