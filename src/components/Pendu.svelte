@@ -40,7 +40,6 @@
 		loseMessage = '';
 		badAnswer = 0;
 		inputValueStock = [];
-
 		displayWordToFind = wordTab[0]
 			.split('')
 			.map((el, index) => {
@@ -54,8 +53,16 @@
 	}
 
 	function isLetterOk() {
+		const letterRegex = /^[a-zA-Z]$/;
+
+		if (!letterRegex.test(inputValue)) {
+			console.log('Veuillez saisir uniquement une lettre.');
+			inputValue = ''; // Réinitialise l'entrée si ce n'est pas une lettre
+			return;
+		}
+
 		let userLetter = inputValue.toLowerCase();
-		inputValueStock.push(userLetter);
+		inputValueStock.push(userLetter  + "-");
 		inputValueStock = [...inputValueStock];
 		if (!inputValue) return;
 		const allLetters = wordTab[0].split('');
@@ -93,15 +100,16 @@
 </script>
 
 <div class="container">
+	<h1 class="title">Le pendu</h1>
 	<div class="wrapper-interface">
-		<label for="word">Saisissez une lettre</label>
+		<label for="word">Saisir une lettre</label>
 		<input bind:value={inputValue} on:input={isLetterOk} type="text" placeholder="" name="word " />
-		<div class="wrapper-letters-user-choice">
-		{#each inputValueStock as letter}
-			<div class="lettres-choice-user">{letter}</div>
-		{/each}
-		</div>
 		<p class="display-word">{displayWordToFind}</p>
+		<div class="wrapper-letters-user-choice">
+			{#each inputValueStock as letter}
+				<div class="lettres-choice-user">{letter}</div>
+			{/each}
+		</div>
 		<p class="win-message">{winMessage}</p>
 		{#if loseMessage}
 			<div class="lose-message">{loseMessage}</div>
@@ -129,12 +137,19 @@
 </div>
 
 <style>
+	.title{
+ font-family: 'Sour Gummy', sans-serif;
+		text-align: center;
+		color: white;
+		font-size: 1.5rem;
+		margin-top: 20px;
+	}
 	.wrapper-pendu {
 		background-color: rgb(43, 43, 43);
 		min-height: 250px;
-		max-width: 300px;
+		min-width: 300px;
 		position: relative;
-		margin: 20px auto;
+		margin: 10px auto;
 		box-shadow: inset 0 0 10px black;
 		display: flex;
 		align-items: center;
@@ -147,6 +162,9 @@
 		flex-direction: column;
 		width: 100%;
 		height: 200px;
+		border: 1px solid grey;
+		margin-top: 10px;
+		padding: 8px;
 	}
 	label {
 		font-size: 0.7rem;
@@ -172,14 +190,15 @@
 		flex-direction: row;
 		align-items: center;
 		justify-content: center;
-
 	}
 
 	.display-word {
-		font-size: 1rem;
+		font-weight: 600;
+		font-size: 2rem;
 		color: white;
-		letter-spacing: 5px;
+		letter-spacing: 10px;
 		margin-top: 10px;
+		text-shadow: 0px 0px 20px white;
 	}
 	.win-message,
 	.lose-message {
@@ -192,8 +211,9 @@
 	}
 	.button__new-game {
 		margin-top: 0px;
-		background-color: rgba(0, 128, 0, 0.968);
-		padding: 100px 70px;
+		background-color: rgb(0, 128, 0);
+		min-height: 250px;
+		min-width: 300px;
 		color: white;
 		border: none;
 		border-radius: 8px;
@@ -220,8 +240,8 @@
 		transition: opacity 0.3s ease-in-out; /* Animation pour l'apparition */
 	}
 	.lettres-choice-user {
-		color: white;
-		font-size: 1rem;
+		color: rgb(204, 199, 199);
+		font-size: 0.8rem;
 	}
 
 	.horizontal {
