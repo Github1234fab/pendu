@@ -1,7 +1,36 @@
 <script>
 	import { fade } from 'svelte/transition';
 
+	let userLettersStock = [
+		'A',
+		'B',
+		'C',
+		'D',
+		'E',
+		'F',
+		'G',
+		'H',
+		'I',
+		'J',
+		'K',
+		'L',
+		'M',
+		'N',
+		'O',
+		'P',
+		'Q',
+		'R',
+		'S',
+		'T',
+		'U',
+		'V',
+		'W',
+		'X',
+		'Y',
+		'Z'
+	];
 	let inputValue = '';
+
 	let displayWordToFind = '';
 	let guessedLetters = [];
 	let winMessage = '';
@@ -14,20 +43,27 @@
 	let inputValueStock = [];
 
 	const wordStock = [
-		'stock',
-		'bateau',
-		'rugby',
-		'homme',
-		'papillote',
-		'chalutier',
-		'fourchette',
-		'bureau',
-		'anis',
-		'sortir'
+		'jouet',
+		'poivre',
+		'sel',
+		'cartable',
+		'meringue',
+		'couteau',
+		'mitraillette',
+		'fusil',
+		'Bougie',
+		'Ballon'
 	];
 	const wordTab = ['tableau'];
 
 	initializeGame();
+
+	function userLettersInInputValue(letter) {
+		inputValue = letter;
+		isLetterOk();
+		console.log(letter);
+		console.log(inputValue);
+	}
 
 	function initializeGame() {
 		guessedLetters = [];
@@ -62,7 +98,7 @@
 		}
 
 		let userLetter = inputValue.toLowerCase();
-		inputValueStock.push(userLetter  + "-");
+		inputValueStock.push(userLetter );
 		inputValueStock = [...inputValueStock];
 		if (!inputValue) return;
 		const allLetters = wordTab[0].split('');
@@ -102,14 +138,15 @@
 <div class="container">
 	<h1 class="title">Le pendu</h1>
 	<div class="wrapper-interface">
-		<label for="word">Saisir une lettre</label>
-		<input bind:value={inputValue} on:input={isLetterOk} type="text" placeholder="" name="word " />
-		<p class="display-word">{displayWordToFind}</p>
-		<div class="wrapper-letters-user-choice">
-			{#each inputValueStock as letter}
-				<div class="lettres-choice-user">{letter}</div>
+		<div class="wrapper__user-letter-selected">
+			{#each userLettersStock as letter}
+				<button class="lettres-choice-user" on:click={() => userLettersInInputValue(letter)}
+					>{letter}</button
+				>
 			{/each}
 		</div>
+		<p class="letters-selected">{inputValueStock}</p>
+		<p class="display-word">{displayWordToFind}</p>
 		<p class="win-message">{winMessage}</p>
 		{#if loseMessage}
 			<div class="lose-message">{loseMessage}</div>
@@ -137,23 +174,14 @@
 </div>
 
 <style>
-	.title{
- font-family: 'Sour Gummy', sans-serif;
+	.title {
+		font-family: roboto;
+		letter-spacing: -1px;
 		text-align: center;
 		color: white;
-		font-size: 1.5rem;
+		font-size: 2rem;
+		font-weight: 100;
 		margin-top: 20px;
-	}
-	.wrapper-pendu {
-		background-color: rgb(43, 43, 43);
-		min-height: 250px;
-		min-width: 300px;
-		position: relative;
-		margin: 10px auto;
-		box-shadow: inset 0 0 10px black;
-		display: flex;
-		align-items: center;
-		justify-content: center;
 	}
 	.wrapper-interface {
 		display: flex;
@@ -162,32 +190,43 @@
 		flex-direction: column;
 		width: 100%;
 		height: 200px;
-		border: 1px solid grey;
 		margin-top: 10px;
 		padding: 8px;
 	}
-	label {
-		font-size: 0.7rem;
-		color: white;
-		margin-top: 20px;
-		margin-bottom: 5px;
-	}
-	input {
-		margin-bottom: 10px;
-		padding: 5px;
-		font-size: 2rem;
-		box-shadow: inset 0px 0px 10px rgba(0, 0, 0, 0.443);
-		max-width: 40px;
-		color: black;
-		text-transform: uppercase;
-	}
-	input::placeholder {
-		font-size: 1rem;
-		text-align: center;
-	}
-	.wrapper-letters-user-choice {
+	.wrapper__user-letter-selected {
 		display: flex;
 		flex-direction: row;
+		align-items: center;
+		justify-content: center;
+		flex-wrap: wrap;
+		gap: 5px;
+		margin-top: 60px;
+	}
+	.lettres-choice-user {
+		background-color: brown;
+		color: whitesmoke;
+		font-size: 1rem;
+		min-width: 20px;
+		padding: 5px 2px;
+		border-radius: 5px;
+		border: none;
+		box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.393);
+	}
+	.letters-selected{
+		font-size: 1rem;
+		color: greenyellow;
+		text-align: center;
+		margin-top: 20px;
+	}
+
+	.wrapper-pendu {
+		background-color: rgb(43, 43, 43);
+		min-height: 250px;
+		max-width: 280px;
+		position: relative;
+		margin: 80px auto;
+		box-shadow: inset 0 0 10px black;
+		display: flex;
 		align-items: center;
 		justify-content: center;
 	}
@@ -197,7 +236,7 @@
 		font-size: 2rem;
 		color: white;
 		letter-spacing: 10px;
-		margin-top: 10px;
+		margin-top: 50px;
 		text-shadow: 0px 0px 20px white;
 	}
 	.win-message,
@@ -212,8 +251,8 @@
 	.button__new-game {
 		margin-top: 0px;
 		background-color: rgb(0, 128, 0);
-		min-height: 250px;
-		min-width: 300px;
+		min-height: 228px;
+		min-width: 270px;
 		color: white;
 		border: none;
 		border-radius: 8px;
@@ -237,11 +276,7 @@
 	.style.visible {
 		visibility: visible;
 		opacity: 1;
-		transition: opacity 0.3s ease-in-out; /* Animation pour l'apparition */
-	}
-	.lettres-choice-user {
-		color: rgb(204, 199, 199);
-		font-size: 0.8rem;
+		transition: opacity 0.5s ease-in-out; /* Animation pour l'apparition */
 	}
 
 	.horizontal {
@@ -263,36 +298,36 @@
 	.right {
 		rotate: 29deg;
 		top: 85%;
-		left: 42%;
+		left: 43%;
 		height: 50px;
 		width: 10px;
 	}
 
 	.center {
 		top: 50%;
-		left: 50%;
+		left: 50.5%;
 		width: 10px;
 		height: 150px;
 	}
 
 	.potence {
 		rotate: 90deg;
-		top: 12%;
+		top: 12.8%;
 		left: 47%;
 		height: 52px;
 		width: 10px;
 	}
 
 	.down {
-		top: 24.5%;
-		left: 65%;
+		top: 25%;
+		left: 66%;
 		height: 30px;
 		width: 10px;
 	}
 
 	.circle {
-		top: 35%;
-		left: 65%;
+		top: 37%;
+		left: 66%;
 		height: 30px;
 		width: 30px;
 		border-radius: 50%;
@@ -300,7 +335,7 @@
 
 	.body-center {
 		top: 54%;
-		left: 65%;
+		left: 66%;
 		width: 10px;
 		height: 60px;
 	}
@@ -308,7 +343,7 @@
 	.body-left {
 		rotate: 40deg;
 		top: 50%;
-		left: 57%;
+		left: 58%;
 		width: 10px;
 		height: 32px;
 	}
@@ -316,7 +351,7 @@
 	.body-right {
 		rotate: -35deg;
 		top: 48%;
-		left: 71%;
+		left: 72%;
 		width: 10px;
 		height: 30px;
 	}
@@ -324,7 +359,7 @@
 	.body-right-down {
 		rotate: 30deg;
 		top: 70%;
-		left: 58%;
+		left: 59%;
 		width: 10px;
 		height: 40px;
 	}
