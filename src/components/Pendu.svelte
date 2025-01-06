@@ -212,11 +212,29 @@
 		border: none;
 		box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.393);
 	}
+		.lettres-choice-user:hover {
+		animation: bounce 0.2s ease-in-out;
+	}
+		.lettres-choice-user:focus{
+border: 1px solid white;
+	}
 	.letters-selected{
 		font-size: 1rem;
 		color: greenyellow;
 		text-align: center;
 		margin-top: 20px;
+	}
+
+	@keyframes bounce {
+		0% {
+			transform: translateY(0);
+		}
+		50% {
+			transform: translateY(-3px);
+		}
+		100% {
+			transform: translateY(0);
+		}
 	}
 
 	.wrapper-pendu {
