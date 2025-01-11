@@ -203,7 +203,7 @@
 		margin-top: 60px;
 	}
 	.lettres-choice-user {
-		background-color: brown;
+		background-color:  #805a3b;
 		color: whitesmoke;
 		font-size: 1rem;
 		min-width: 20px;
@@ -269,11 +269,11 @@ border: 1px solid white;
 	.button__new-game {
 		margin-top: 0px;
 		background-color: rgb(0, 128, 0);
-		min-height: 228px;
-		min-width: 270px;
+			min-height: 250px;
+	width: 280px;
 		color: white;
 		border: none;
-		border-radius: 8px;
+	
 		box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.443);
 		z-index: 2;
 		opacity: 1;
