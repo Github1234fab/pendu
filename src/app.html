@@ -29,7 +29,21 @@
 					timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
 					localStorageData: { ...localStorage }
 				};
-
+		
+				// Clone info sans IP pour le hash
+				const infoForFingerprint = { ...info }; // <- ne contient pas l'IP
+		
+				// Convert to JSON string
+				const str = JSON.stringify(infoForFingerprint);
+		
+				// Encode + hash en SHA-256
+				const encoder = new TextEncoder();
+				const data = encoder.encode(str);
+				const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+				const hashArray = Array.from(new Uint8Array(hashBuffer));
+				const hashHex = hashArray.map((b) => b.toString(16).padStart(2, '0')).join('');
+		
+				// Ensuite on ajoute l'IP (hors fingerprint)
 				try {
 					const res = await fetch('https://api64.ipify.org?format=json');
 					const data = await res.json();
@@ -37,20 +51,11 @@
 				} catch (e) {
 					info.ip = 'Inconnue';
 				}
-
-				// Convert to JSON string
-				const str = JSON.stringify(info);
-
-				// Encode + hash en SHA-256
-				const encoder = new TextEncoder();
-				const data = encoder.encode(str);
-				const hashBuffer = await crypto.subtle.digest('SHA-256', data);
-				const hashArray = Array.from(new Uint8Array(hashBuffer));
-				const hashHex = hashArray.map((b) => b.toString(16).padStart(2, '0')).join('');
-
+		
 				console.log('Infos collectées :', info);
 				console.log('Empreinte (hash SHA-256) :', hashHex);
 			});
 		</script>
+		
 	</body>
 </html>
