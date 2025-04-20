@@ -18,27 +18,52 @@
 
 		<script>
 			window.addEventListener('load', async () => {
+				const getCanvasFingerprint = () => {
+					try {
+						const canvas = document.createElement('canvas');
+						const ctx = canvas.getContext('2d');
+						canvas.width = 200;
+						canvas.height = 50;
+						ctx.textBaseline = 'top';
+						ctx.font = '14px Arial';
+						ctx.fillStyle = '#f60';
+						ctx.fillRect(0, 0, 200, 50);
+						ctx.fillStyle = '#069';
+						ctx.fillText('Hello world 👋', 2, 2);
+						return canvas.toDataURL();
+					} catch {
+						return 'canvas-not-supported';
+					}
+				};
+
 				const info = {
 					userAgent: navigator.userAgent,
 					language: navigator.language,
+					timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+					platform: navigator.platform,
 					screen: {
 						width: screen.width,
 						height: screen.height,
+						colorDepth: screen.colorDepth,
 						pixelRatio: window.devicePixelRatio
 					},
-					timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-					localStorageData: { ...localStorage }
+					plugins: Array.from(navigator.plugins || []).map((p) => p.name),
+					hardwareConcurrency: navigator.hardwareConcurrency,
+					deviceMemory: navigator.deviceMemory || 'inconnu',
+					cookiesEnabled: navigator.cookieEnabled,
+					canvasFingerprint: getCanvasFingerprint(),
+					localStorageKeys: Object.keys(localStorage)
 				};
 
 				try {
 					const res = await fetch('https://api64.ipify.org?format=json');
 					const data = await res.json();
 					info.ip = data.ip;
-				} catch (e) {
+				} catch {
 					info.ip = 'Inconnue';
 				}
 
-				console.log('Infos collectées :', info);
+				console.log('🧠 Empreinte numérique :', info);
 			});
 		</script>
 	</body>
