@@ -18,53 +18,40 @@
 
 		<script>
 			window.addEventListener('load', async () => {
-				const getCanvasFingerprint = () => {
-					try {
-						const canvas = document.createElement('canvas');
-						const ctx = canvas.getContext('2d');
-						canvas.width = 200;
-						canvas.height = 50;
-						ctx.textBaseline = 'top';
-						ctx.font = '14px Arial';
-						ctx.fillStyle = '#f60';
-						ctx.fillRect(0, 0, 200, 50);
-						ctx.fillStyle = '#069';
-						ctx.fillText('Hello world 👋', 2, 2);
-						return canvas.toDataURL();
-					} catch {
-						return 'canvas-not-supported';
-					}
-				};
-
-				const info = {
-					userAgent: navigator.userAgent,
-					language: navigator.language,
-					timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-					platform: navigator.platform,
-					screen: {
-						width: screen.width,
-						height: screen.height,
-						colorDepth: screen.colorDepth,
-						pixelRatio: window.devicePixelRatio
-					},
-					plugins: Array.from(navigator.plugins || []).map((p) => p.name),
-					hardwareConcurrency: navigator.hardwareConcurrency,
-					deviceMemory: navigator.deviceMemory || 'inconnu',
-					cookiesEnabled: navigator.cookieEnabled,
-					canvasFingerprint: getCanvasFingerprint(),
-					localStorageKeys: Object.keys(localStorage)
-				};
-
-				try {
-					const res = await fetch('https://api64.ipify.org?format=json');
-					const data = await res.json();
-					info.ip = data.ip;
-				} catch {
-					info.ip = 'Inconnue';
-				}
-
-				console.log('🧠 Empreinte numérique :', info);
+			  const info = {
+				userAgent: navigator.userAgent,
+				language: navigator.language,
+				screen: {
+				  width: screen.width,
+				  height: screen.height,
+				  pixelRatio: window.devicePixelRatio
+				},
+				timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+				localStorageData: { ...localStorage }
+			  };
+		  
+			  try {
+				const res = await fetch('https://api64.ipify.org?format=json');
+				const data = await res.json();
+				info.ip = data.ip;
+			  } catch (e) {
+				info.ip = 'Inconnue';
+			  }
+		  
+			  // Convert to JSON string
+			  const str = JSON.stringify(info);
+		  
+			  // Encode + hash en SHA-256
+			  const encoder = new TextEncoder();
+			  const data = encoder.encode(str);
+			  const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+			  const hashArray = Array.from(new Uint8Array(hashBuffer));
+			  const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+		  
+			  console.log('Infos collectées :', info);
+			  console.log('Empreinte (hash SHA-256) :', hashHex);
 			});
-		</script>
+		  </script>
+		  
 	</body>
 </html>
